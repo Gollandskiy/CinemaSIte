@@ -1,0 +1,230 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        table.films-table th,
+        table.films-table td {
+            padding: 3px;
+            font-size: 12px;
+        }
+
+        table.films-table {
+            max-width: 600px;
+            overflow-y: hidden;
+            overflow-x: auto;
+        }
+
+        .edit-button, .delete-button {
+            padding: 2px 8px;
+            margin-right: 5px;
+        }
+
+        .edit-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 navbar-transition">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="General" asp-action="Index">
+                    <span style="font-size: 24px; line-height: 30px;">⟵</span>
+                </a>
+                <div class="form-check form-switch">
+                    <input class="form-check-input visually-hidden" type="checkbox" id="theme-switch" checked>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <h1>Admin Panel</h1>
+
+    <h2>Users</h2>
+    <form id="editUserForm" style="display: none;" method="post">
+        <input type="hidden" name="userId" id="editUserId" />
+        <input type="text" name="username" id="editUsername" placeholder="Username" />
+        <input type="email" name="email" id="editEmail" placeholder="Email" />
+        <input type="tel" name="telephone" id="editTelephone" placeholder="Telephone" />
+        <input type="number" name="age" id="editAge" placeholder="Age" />
+        <button type="submit" onclick="submitUserForm()">Save</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Telephone</th>
+                <th>Age</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in ViewBag.Users)
+            {
+                <tr>
+                    <td>@user.Username</td>
+                    <td>@user.Email</td>
+                    <td>@user.Telephone</td>
+                    <td>@user.Age</td>
+                    <td>@user.RegistrationDate</td>
+                    <td>
+                        <button class="edit-button" onclick="editUserForm('@user.Id', '@user.Username', '@user.Email', '@user.Telephone', @user.Age)">Edit</button>
+                        <form method="post" action="@Url.Action("DeleteUser", "Admin")">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Films</h2>
+    <form id="editFilmForm" style="display: none;" method="post">
+        <input type="hidden" name="filmId" id="editFilmId" />
+        <input type="text" name="title" id="editTitle" placeholder="Title" />
+        <input type="text" name="director" id="editDirector" placeholder="Director" />
+        <input type="text" name="genre" id="editGenre" placeholder="Genre" />
+        <input type="number" name="durationMinutes" id="editDuration" placeholder="Duration (minutes)" />
+        <input type="text" name="releaseDate" id="editReleaseDate" placeholder="Release Date" />
+        <input type="text" name="imageUrl" id="editImageUrl" placeholder="Image URL" />
+        <input type="text" name="videoUrl" id="editVideoUrl" placeholder="Video URL" />
+        <button type="submit" onclick="submitFilmForm()">Save</button>
+    </form>
+    <table class="films-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Director</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Release Date</th>
+                <th>ImageURL</th>
+                <th>VideoURL</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var film in ViewBag.Films)
+            {
+                <tr>
+                    <td>@film.Title</td>
+                    <td>@film.Director</td>
+                    <td>@film.Genre</td>
+                    <td>@film.DurationMinutes</td>
+                    <td>@film.ReleaseDate</td>
+                    <td>@film.ImageUrl</td>
+                    <td>@film.VideoUrl</td>
+                    <td>
+                        <button class="edit-button" onclick="editFilmForm('@film.Id', '@film.Title', '@film.Director', '@film.Genre', @film.DurationMinutes, '@film.ReleaseDate', '@film.ImageUrl', '@film.VideoUrl')">Edit</button>
+                        <form method="post" action="@Url.Action("DeleteFilm", "Admin")">
+                            <input type="hidden" name="filmId" value="@film.Id" />
+                            <button class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function editUserForm(userId, username, email, telephone, age) {
+            $("#editUserId").val(userId);
+            $("#editUsername").val(username);
+            $("#editEmail").val(email);
+            $("#editTelephone").val(telephone);
+            $("#editAge").val(age);
+
+            $("#editUserForm").show();
+        }
+
+        function submitUserForm() {
+            var formData = $("#editUserForm").serialize();
+            $.post('@Url.Action("EditUser", "Admin")', formData)
+                .done(function () {
+                    location.reload();
+                })
+                .fail(function (xhr, status, error) {
+                    console.error("Failed to submit user form: " + xhr.responseText);
+                });
+        }
+
+        function editFilmForm(filmId, title, director, genre, duration, releaseDate, imageUrl, videoUrl) {
+            $("#editFilmId").val(filmId);
+            $("#editTitle").val(title);
+            $("#editDirector").val(director);
+            $("#editGenre").val(genre);
+            $("#editDuration").val(duration);
+            $("#editReleaseDate").val(releaseDate);
+            $("#editImageUrl").val(imageUrl);
+            $("#editVideoUrl").val(videoUrl);
+
+            $("#editFilmForm").show();
+        }
+
+        function submitFilmForm() {
+            var releaseDate = $("#editReleaseDate").val();
+            var formData = $("#editFilmForm").serialize();
+            $.post('@Url.Action("EditFilm", "Admin")', formData)
+                .done(function () {
+                    location.reload();
+                })
+                .fail(function (xhr, status, error) {
+                    console.error("Failed to submit film form: " + xhr.responseText);
+                });
+        }
+    </script>
+</body>
+</html>

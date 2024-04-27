@@ -1,0 +1,106 @@
+﻿@model CinemaSIte.Models.FilmModel
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Детальная информация о фильме - CinemaSIte</title>
+    <link id="theme-style" rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CinemaSIte.styles.css" asp-append-version="true" />
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 navbar-transition">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="General" asp-action="Index">
+                    <span style="font-size: 24px; line-height: 30px;">⟵</span>
+                </a>
+                <div class="form-check form-switch">
+                    <input class="form-check-input visually-hidden" type="checkbox" id="theme-switch" checked>
+                    <label class="form-check-label" for="theme-switch">
+                        <span class="switch"></span>
+                        <span class="switch-label">🌓</span>
+                    </label>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Детальная информация о фильме</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <iframe width="560" height="315" src="@Model.VideoUrl" frameborder="0" allowfullscreen></iframe>
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.Title</h5>
+                        <p class="card-text">Режиссер: @Model.Director</p>
+                        <p class="card-text">Жанр: @Model.Genre</p>
+                        <p class="card-text">Длительность: @Model.DurationMinutes минут</p>
+                        <p class="card-text">Дата выхода: @Model.ReleaseDate.ToShortDateString()</p>
+                        <p class="card-text">Описание: @Model.Description</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 ml-md-auto reviews-column">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Отзывы и рецензии</h5>
+                        <div class="review mb-4">
+                            <div class="border p-3 d-flex align-items-center">
+                                <div class="avatar mr-2">
+                                    <img src="~/images/avatar1.jpg" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%;">
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Панкуха45</h6>
+                                    <p class="mb-0">Отличный фильм! Рекомендую всем.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="review mb-4">
+                            <div class="border p-3 d-flex align-items-center">
+                                <div class="avatar mr-2">
+                                    <img src="~/images/avatar2.jpg" alt="Avatar" style="width: 30px; height: 30px; border-radius: 50%;">
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Душнила89</h6>
+                                    <p class="mb-0">Очень интересный сюжет, но финал оставил желать лучшего.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            const isDarkMode = localStorage.getItem('theme') === 'dark';
+            setTheme(isDarkMode);
+
+            $('#theme-switch').on('change', function () {
+                const isDark = $(this).prop('checked');
+                setTheme(isDark);
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            });
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    $('#theme-style').attr('href', '/css/dark-theme.css');
+                    $('header').removeClass('bg-white').addClass('bg-dark');
+                } else {
+                    $('#theme-style').attr('href', '/css/light-theme.css');
+                    $('header').removeClass('bg-dark').addClass('bg-white');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
